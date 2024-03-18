@@ -18,17 +18,27 @@ from django.contrib import admin
 from django.urls import path
 
 
-from .views import add_to_cart,cart_api_view,cart_delete,reduce_cart_quantity,get_cart_list
-
+# from .views import add_to_cart,cart_api_view,cart_delete,reduce_cart_quantity,get_cart_list,AddOrder,order_items
+from .views import  AddToCartAPIView,CartRemoveAPIView,CartViewAPIView,CartDeleteAPIView,get_cart_list,ViewOrdersAPIView,OrderItemsAPIView
 
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     # path('add_to_cart/', AddToCartView.as_view(), name='add-to-cart'),
-    path('add_to_cart/<int:item_id>/', add_to_cart, name='add_to_cart'),
-    path('cart-api/', cart_api_view, name='cart-api'),
-    path('delete/<int:b>/', cart_delete, name='cart-delete'),
-    path('reduce_quantity/<int:b>/', reduce_cart_quantity, name='reduce-cart-quantity'),
-    path('list/', get_cart_list, name='cart-list')
+    # path('add_to_cart/<int:item_id>/', add_to_cart, name='add_to_cart'),
+    # path('cart-api/', cart_api_view, name='cart-api'),
+    # path('delete/<int:b>/', cart_delete, name='cart-delete'),
+    # path('reduce_quantity/<int:b>/', reduce_cart_quantity, name='reduce-cart-quantity'),
+    # path('list/', get_cart_list, name='cart-list'),
+    path('add-to-cart/<int:b>/', AddToCartAPIView.as_view(), name='add_to_cart'),
+    path('cart-remove/<int:b>/', CartRemoveAPIView.as_view(), name='cart_remove'),
+    path('cart-view/', CartViewAPIView.as_view(), name='cart_view'),
+    path('cart-delete/<int:b>/', CartDeleteAPIView.as_view(), name='cart_delete'),
+    path('list/', get_cart_list, name='cart-list'),
+    # path('orderitems/<int:id>/',AddOrder,name='order_items'),
+    # path('order/<int:id>/',order_items),
+    # path('CartOrderAPIView/', CartOrderAPIView.as_view(), name='CartOrderAPIView'),
+    path('api/order-items/', OrderItemsAPIView.as_view(), name='order_items_api'),
+    path('view-orders/', ViewOrdersAPIView.as_view(), name='view_orders'),
 ]
 

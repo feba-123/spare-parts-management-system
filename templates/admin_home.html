@@ -1,0 +1,68 @@
+
+
+
+{% extends 'admin_navigation.html' %}
+{% load static %}
+{% block body %}
+
+<div class="market-updates">
+    <a href="{% url 'adminapplication:category_list' %}">
+        <div class="col-md-4 market-update-gd">
+            <div class="market-update-block clr-block-1" style="background-color: blue;">
+                <div class="col-md-8 market-update-left">
+                    <h3></h3>
+                    <h4>All Categories</h4>
+                    <p></p>
+                </div>
+                <div class="col-md-4 market-update-right">
+                    <i style="border-radius: 50%; font-size: 45px; color: Lime; background: white; padding: 18px;" class="fas fa-cog"> </i>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+        </div>
+    </a>
+    <a href="{% url 'adminapplication:item_list' %}">
+        <div class="col-md-4 market-update-gd">
+            <div class="market-update-block clr-block-2" style="background-color: blue;">
+                <div class="col-md-8 market-update-left">
+                    <h3></h3>
+                    <h4>All Items</h4>
+                    <p></p>
+                </div>
+                <div class="col-md-4 market-update-right">
+                    <i class="fa fa-eye"> </i>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+        </div>
+    </a>
+    <a href="{% url 'adminapplication:deadstock_item_list' %}">
+        <div class="col-md-4 market-update-gd">
+            <div class="market-update-block clr-block-3">
+                <div class="col-md-8 market-update-left">
+                    <h3></h3>
+                    <h4>All deadstock items</h4>
+                    <p></p>
+                </div>
+                <div class="col-md-4 market-update-right">
+                    <i class="fa fa-envelope-o"> </i>
+                </div>
+                <div class="clearfix"> </div>
+            </div>
+        </div>
+    </a>
+    <div class="clearfix"> </div>
+</div>
+<footer class="site-footer" style="margin-top: 15%;">
+    <div class="container">
+        <!-- Footer content here -->
+    </div>
+</footer>
+
+{% endblock %}
+
+
+
+
+
+

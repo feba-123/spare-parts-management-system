@@ -17,13 +17,20 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from .views import SuperuserLogoutView,SuperuserLoginView,ItemAPIView,ItemDetail
-
+from .views import ItemAPIView,ItemDetail,CategoryAPIView
+from .views import DeadstockItemListCreateView, DeadstockItemDetailView,BookDeadstockItem
+from django.conf import settings
+from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('superuser-login/', SuperuserLoginView.as_view(), name='superuser-login'),
-    path('logout/', SuperuserLogoutView.as_view()),
+    path('categories/', CategoryAPIView.as_view(), name='categories-api'),
     path('items/', ItemAPIView.as_view(), name='item-list-create'),
     path('itemsdetail/<int:pk>/', ItemDetail.as_view(), name='item-detail'),
+    path('deadstock_items/', DeadstockItemListCreateView.as_view(), name='deadstock-item-list-create'),
+    path('deadstock_items/<int:pk>/', DeadstockItemDetailView.as_view(), name='deadstock-item-detail'),
+    path('book/<int:item_id>/', BookDeadstockItem.as_view(), name='book_deadstock_item'),
 ]
 
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL,document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
