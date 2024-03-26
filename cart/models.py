@@ -34,3 +34,6 @@ class Order(models.Model):
     quantity = models.IntegerField(null=True,blank=True)
     address = models.CharField(max_length=100, null=True,blank=True)
     notes=models.CharField(max_length=100,null=True,blank=True)
+    date=models.ForeignKey(Order_Items,on_delete=models.CASCADE,null=True,blank=True)
+    # item_name = models.ForeignKey(Item, on_delete=models.CASCADE, null=True, blank=True)
+    # item_price = models.ForeignKey(Item, on_delete=models.CASCADE, null=True, blank=True)

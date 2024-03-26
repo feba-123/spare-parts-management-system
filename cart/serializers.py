@@ -46,6 +46,26 @@ class Order_ItemsSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class OrderSerializer(serializers.ModelSerializer):
+
+    item_name = serializers.SerializerMethodField()
+    item_price = serializers.SerializerMethodField()
+    item_image = serializers.SerializerMethodField()
+    total_amount = serializers.SerializerMethodField()
     class Meta:
         model = Order
-        fields = '__all__'
+        fields = ['id','item','item_name', 'item_price','item_image','quantity', 'address', 'notes', 'user','total_amount']
+    def get_item_name(self, obj):
+        return obj.item.item_name
+
+    def get_item_price(self, obj):
+        return obj.item.price
+    def get_item_image(self, obj):
+        return obj.item.item_image.url
+
+    def get_total_amount(self, obj):
+        return obj.quantity * obj.item.price
+
+class BuyItemSerializer(serializers.Serializer):
+    quantity = serializers.IntegerField(min_value=1)
+    address = serializers.CharField(max_length=255)
+    notes = serializers.CharField(max_length=255)

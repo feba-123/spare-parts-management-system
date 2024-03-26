@@ -38,8 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles','owner',
     'rest_framework',
-    'rest_framework.authtoken','rest_framework_simplejwt',
+    'rest_framework_simplejwt',
     'rest_framework_simplejwt.token_blacklist','user','cart','adminapplication',
+    'drf_spectacular'
 
 
 ]
@@ -53,6 +54,7 @@ REST_FRAMEWORK = {
    'DEFAULT_PERMISSION_CLASSES': (
         'rest_framework.permissions.AllowAny',
     ),
+'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
 }
 
 

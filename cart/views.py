@@ -28,7 +28,7 @@ from rest_framework.views import APIView
 from rest_framework.permissions import IsAuthenticated
 from .models import Cart, Item
 from owner.serializers import  ItemSerializer
-
+from cart.serializers import BuyItemSerializer
 class AddToCartAPIView(APIView):
     permission_classes = [IsAuthenticated]
     def post(self, request, b):
@@ -170,7 +170,7 @@ class OrderItemsAPIView(APIView):
             order=Order.objects.filter(user=user)
         except Cart.DoesNotExist or Order.DoesNotExist:
             return Response(status=status.HTTP_404_NOT_FOUND)
-        order.delete()
+        # order.delete()
         if not cart_entries:
             return Response({'detail': "Cart is empty"}, status=status.HTTP_400_BAD_REQUEST)
 
@@ -186,7 +186,8 @@ class OrderItemsAPIView(APIView):
                     user=user,
                     address=address,
                     notes=notes,
-                    quantity=entry.quantity
+                    quantity=entry.quantity,
+
                 )
                 order.save()
 
@@ -199,19 +200,70 @@ class OrderItemsAPIView(APIView):
 from rest_framework.authentication import TokenAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+# class ViewOrdersAPIView(APIView):
+#     # authentication_classes = [TokenAuthentication]
+#     # permission_classes = [IsAuthenticated]
+#
+#     def get(self, request):
+#         orders = Order.objects.filter(user=request.user).annotate(
+#             price_as_decimal=Cast('item__price', DecimalField()),
+#             sub_total=ExpressionWrapper(F('quantity') * F('price_as_decimal'), output_field=DecimalField())
+#         )
+#         total = orders.aggregate(total=Sum('sub_total'))['total'] or 0
+#         serializer = OrderSerializer(orders, many=True)
+#         return Response({'order': serializer.data}, status=status.HTTP_200_OK)
+
 class ViewOrdersAPIView(APIView):
     # authentication_classes = [TokenAuthentication]
     # permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        orders = Order.objects.filter(user=request.user).annotate(
-            price_as_decimal=Cast('item__price', DecimalField()),
-            sub_total=ExpressionWrapper(F('quantity') * F('price_as_decimal'), output_field=DecimalField())
-        )
-        total = orders.aggregate(total=Sum('sub_total'))['total'] or 0
+        # Retrieve all orders for the current user
+        orders = Order.objects.filter(user=request.user).order_by('-id')
+
+        # Serialize the orders data
         serializer = OrderSerializer(orders, many=True)
-        return Response({'order': serializer.data, 'total': total}, status=status.HTTP_200_OK)
+
+        # Return the serialized data in the response
+        return Response({'orders': serializer.data}, status=status.HTTP_200_OK)
 
 
+class BuyItemView(APIView):
+    def post(self, request, item_id):
+        serializer = BuyItemSerializer(data=request.data)
+        if serializer.is_valid():
+            quantity = serializer.validated_data['quantity']
+            address = serializer.validated_data['address']
+            notes = serializer.validated_data['notes']
+            try:
+                item = Item.objects.get(pk=item_id)
+            except Item.DoesNotExist:
+                return Response({"error": "Item not found"}, status=status.HTTP_404_NOT_FOUND)
 
+            if item.available and item.stock >= quantity:
+                # Assuming you have a user authentication system in place, you can get the user who is buying the item
+                user = request.user  # Assuming user is authenticated
+
+                # Create an order
+                order = Order.objects.create(
+                    user=user,
+                    item=item,
+                    quantity=quantity,
+                    address=address,
+                    notes=notes
+                )
+
+                # Perform the purchase logic here, for example, deducting the stock, updating user's purchase history, etc.
+                # You should implement this according to your application's logic
+
+                # For example, deducting the stock:
+                item.stock -= quantity
+                item.save()
+
+                return Response({"message": "Purchase successful", "order_id": order.pk}, status=status.HTTP_200_OK)
+            else:
+                return Response({"error": "Item not available or insufficient stock"},
+                                status=status.HTTP_400_BAD_REQUEST)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 

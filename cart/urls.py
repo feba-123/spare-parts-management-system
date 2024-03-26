@@ -19,7 +19,7 @@ from django.urls import path
 
 
 # from .views import add_to_cart,cart_api_view,cart_delete,reduce_cart_quantity,get_cart_list,AddOrder,order_items
-from .views import  AddToCartAPIView,CartRemoveAPIView,CartViewAPIView,CartDeleteAPIView,get_cart_list,ViewOrdersAPIView,OrderItemsAPIView
+from .views import  AddToCartAPIView,CartRemoveAPIView,CartViewAPIView,CartDeleteAPIView,get_cart_list,ViewOrdersAPIView,OrderItemsAPIView,BuyItemView
 
 
 urlpatterns = [
@@ -40,5 +40,6 @@ urlpatterns = [
     # path('CartOrderAPIView/', CartOrderAPIView.as_view(), name='CartOrderAPIView'),
     path('api/order-items/', OrderItemsAPIView.as_view(), name='order_items_api'),
     path('view-orders/', ViewOrdersAPIView.as_view(), name='view_orders'),
+    path('buy/<int:item_id>/', BuyItemView.as_view(), name='buy_item'),
 ]
 
